@@ -115,7 +115,5 @@ target_include_directories(${LIBRARY} PUBLIC
   ${STLIB_DIR}/Inc/ST-LIB_HIGH
   Inc
   Inc/Models
-  Inc/Models/Communication
-  Inc/Models/Communication/CAN
   Inc/C++Utilities
 )
