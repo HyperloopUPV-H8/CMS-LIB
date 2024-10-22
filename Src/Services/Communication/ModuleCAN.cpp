@@ -23,7 +23,7 @@ bool ModuleCAN<StringAmount, ModulesPerString>::read_next() {
             CMS::Messages::ModuleState module_state{
                 .general_state{static_cast<CMS::GeneralModuleState>(
                     (static_cast<uint16_t>(last_packet.rx_data[1]) << 8) |
-                    last_packet.rx_data[2])},
+                    last_packet.rx_data[0])},
                 .module_voltage{static_cast<CMS::ModuleVoltage>(
                     (static_cast<uint16_t>(last_packet.rx_data[3]) << 8) |
                     last_packet.rx_data[2])},
