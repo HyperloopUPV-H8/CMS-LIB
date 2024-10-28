@@ -6,6 +6,7 @@
 namespace CMS {
 
 class Module {
+   public:
     ModuleVoltage module_voltage{};
 
     CellVoltage cell_voltages[48 + 1]{};  // Simplify indexing
@@ -33,7 +34,6 @@ class Module {
     char version_variant{};
     uint8_t version_type_modules{};
 
-   public:
     void update_module_state(Messages::ModuleState module_state) {
         general_state = module_state.general_state;
         module_voltage = module_state.module_voltage;
