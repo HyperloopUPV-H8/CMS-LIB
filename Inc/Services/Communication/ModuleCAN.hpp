@@ -4,56 +4,68 @@
 #include "CMS/String.hpp"
 #include "CMS/Types.hpp"
 
+namespace CMS {
 // Protocol between the CMSs and the board
 template <uint8_t StringAmount, uint8_t ModulesPerString>
 class ModuleCAN {
-   private:
-    const uint8_t fdcan_instance;
-
    public:
-    CMS::String<ModulesPerString>
+    static CMS::String<ModulesPerString>
         strings[StringAmount + 1];  // Simplify indexing
 
-    ModuleCAN(uint8_t instance) : fdcan_instance(instance) {};
-
     // Read the next message and update the data with the new information
-    bool read_next();
+    static bool decode(Messages::Packet packet);
 
     // Request data from a specific module on a specific string
-    bool request_data(uint8_t string, uint8_t module,
-                      CMS::DataRequestFlags tx_config, CMS::TxCycle tx_cycle);
+    static bool encode_data_request(uint8_t string, uint8_t module,
+                                    CMS::DataRequestFlags tx_config,
+                                    CMS::TxCycle tx_cycle,
+                                    Messages::Packet &packet);
     // Broadcast to all modules in a single string a data request
-    bool request_data(uint8_t string, CMS::DataRequestFlags tx_config,
-                      CMS::TxCycle tx_cycle) {
-        return request_data(string, 0, tx_config, tx_cycle);
+    static bool encode_data_request(uint8_t string,
+                                    CMS::DataRequestFlags tx_config,
+                                    CMS::TxCycle tx_cycle,
+                                    Messages::Packet &packet) {
+        return encode_data_request(string, 0, tx_config, tx_cycle, packet);
     }
     // Broadcast to all modules in all strings a data request
-    bool request_data(CMS::DataRequestFlags tx_config, CMS::TxCycle tx_cycle) {
-        return request_data(0, 0, tx_config, tx_cycle);
+    static bool encode_data_request(CMS::DataRequestFlags tx_config,
+                                    CMS::TxCycle tx_cycle,
+                                    Messages::Packet &packet) {
+        return encode_data_request(0, 0, tx_config, tx_cycle, packet);
     }
 
     // Request service data of specific module on a specific string
-    bool request_service(uint8_t string, uint8_t module,
-                         CMS::ServiceCommand command);
+    static bool encode_service_request(uint8_t string, uint8_t module,
+                                       CMS::ServiceCommand command,
+                                       Messages::Packet &packet);
     // Broadcast to all modules in a single string a service request
-    bool request_service(uint8_t string, CMS::ServiceCommand command) {
-        return request_service(string, 0, command);
+    static bool encode_service_request(uint8_t string,
+                                       CMS::ServiceCommand command,
+                                       Messages::Packet &packet) {
+        return encode_service_request(string, 0, command, packet);
     }
     // Broadcast to all modules in all strings a service request.
     // Since only the GetID command works on broadcast to all, the command
     // cannot be configured
-    bool request_service() {
-        return request_service(0, 0, CMS::ServiceCommand::GetID);
+    static bool encode_service_request(Messages::Packet &packet) {
+        return encode_service_request(0, 0, CMS::ServiceCommand::GetID, packet);
     }
 
     // Request a restart of a specific module on a specific string
-    bool request_restart(uint8_t string, uint8_t module, CMS::RestartMode mode);
+    static bool encode_restart_request(uint8_t string, uint8_t module,
+                                       CMS::RestartMode mode,
+                                       Messages::Packet &packet);
     // Broadcast to all modules in a single string a restart request
-    bool request_restart(uint8_t string) {
-        return request_restart(string, 0, CMS::RestartMode::NormalRestart);
+    static bool encode_restart_request(uint8_t string,
+                                       Messages::Packet &packet) {
+        return encode_restart_request(string, 0,
+                                      CMS::RestartMode::NormalRestart, packet);
     }
     // Broadcast to all modules in all strings a restart request
-    bool request_restart() {
-        return request_restart(0, 0, CMS::RestartMode::NormalRestart);
+    static bool encode_restart_request(Messages::Packet &packet) {
+        return encode_restart_request(0, 0, CMS::RestartMode::NormalRestart,
+                                      packet);
     }
 };
+
+}  // namespace CMS

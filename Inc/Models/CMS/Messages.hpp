@@ -1,9 +1,16 @@
 #pragma once
+#include <array>
 #include <cstdint>
 
 #include "CMS/Types.hpp"
 
 namespace CMS::Messages {
+
+struct Packet {
+    uint32_t id;
+    uint8_t length;
+    std::array<uint8_t, 64> data;
+};
 
 struct DataRequest {
     CMS::DataRequestFlags tx_config;
