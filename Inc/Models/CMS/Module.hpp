@@ -9,8 +9,8 @@ class Module {
    public:
     ModuleVoltage module_voltage{};
 
-    CellVoltage cell_voltages[48 + 1]{};  // Simplify indexing
-    CellVoltage max_cell_votlage{}, min_cell_voltage{}, mean_cell_voltage{};
+    std::array<CellVoltage, 48> cell_voltages{};
+    CellVoltage max_cell_voltage{}, min_cell_voltage{}, mean_cell_voltage{};
 
     Temperature max_temperature, min_temperature;
 
@@ -46,7 +46,7 @@ class Module {
     }
 
     void update_cell_state(Messages::CellState cell_state) {
-        max_cell_votlage = cell_state.max_voltage;
+        max_cell_voltage = cell_state.max_voltage;
         cell_voltages[cell_state.max_voltage_cell] = cell_state.max_voltage;
         min_cell_voltage = cell_state.min_voltage;
         cell_voltages[cell_state.min_voltage_cell] = cell_state.min_voltage;
@@ -64,9 +64,9 @@ class Module {
         // cells_voltage.message_number <= 15
 
         uint8_t base = cells_voltage.message_number * 3;
-        cell_voltages[base + 1] = cells_voltage.voltages[0];
-        cell_voltages[base + 2] = cells_voltage.voltages[1];
-        cell_voltages[base + 3] = cells_voltage.voltages[2];
+        cell_voltages[base + 0] = cells_voltage.voltages[0];
+        cell_voltages[base + 1] = cells_voltage.voltages[1];
+        cell_voltages[base + 2] = cells_voltage.voltages[2];
     }
 
     void update_id(Messages::GetID update) {
