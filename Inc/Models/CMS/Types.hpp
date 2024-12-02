@@ -133,6 +133,10 @@ struct IDParts {
 
 inline uint32_t get_id(CMS::ProtocolNumber protocol, uint8_t string,
                        uint8_t module) {
+    //broadcast
+    if(string == 0 && module == 0){
+        return 0x400;
+    }
     return (static_cast<uint32_t>(static_cast<uint8_t>(protocol) & 0b00000111)
             << 8) |
            (static_cast<uint32_t>(string & 0b00001111) << 4) |
