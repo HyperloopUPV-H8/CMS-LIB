@@ -7,12 +7,12 @@ namespace CMS {
 
 class Module {
    public:
-    ModuleVoltage module_voltage{};
+    float module_voltage{};
 
-    std::array<CellVoltage, 48> cell_voltages{};
-    CellVoltage max_cell_voltage{}, min_cell_voltage{}, mean_cell_voltage{};
+    std::array<float, 48> cell_voltages{};
+    float max_cell_voltage{}, min_cell_voltage{}, mean_cell_voltage{};
 
-    Temperature max_temperature, min_temperature;
+    float max_temperature, min_temperature;
 
     GeneralModuleState general_state{GeneralModuleState::NoState};
     ErrorCode last_error_code{ErrorCode::NoError};
@@ -34,11 +34,23 @@ class Module {
     char version_variant{};
     uint8_t version_type_modules{};
 
+    Module() : module_voltage(99) {}
+
     void update_module_state(Messages::ModuleState module_state) {
         general_state = module_state.general_state;
-        module_voltage = module_state.module_voltage;
-        max_temperature = module_state.max_temperature;
-        min_temperature = module_state.min_temperature;
+        module_voltage = static_cast<float>(module_state.module_voltage) / 10;
+        if (module_state.max_temperature == 0) {
+            max_temperature = 0;
+        } else {
+            max_temperature =
+                static_cast<float>(module_state.max_temperature) - 273.5;
+        }
+        if (module_state.min_temperature == 0) {
+            min_temperature = 0;
+        } else {
+            min_temperature =
+                static_cast<float>(module_state.min_temperature) - 273.5;
+        }
         last_error_code = module_state.error_code;
         // TODO: check if this increments to see if data is updated
 
@@ -46,11 +58,26 @@ class Module {
     }
 
     void update_cell_state(Messages::CellState cell_state) {
-        max_cell_voltage = cell_state.max_voltage;
-        cell_voltages[cell_state.max_voltage_cell] = cell_state.max_voltage;
-        min_cell_voltage = cell_state.min_voltage;
-        cell_voltages[cell_state.min_voltage_cell] = cell_state.min_voltage;
-        mean_cell_voltage = cell_state.mean_voltage;
+        max_cell_voltage =
+            static_cast<float>(static_cast<uint32_t>(cell_state.max_voltage)
+                               << 14) /
+            5;
+        cell_voltages[cell_state.max_voltage_cell] =
+            static_cast<float>(static_cast<uint32_t>(cell_state.max_voltage)
+                               << 14) /
+            5;
+        min_cell_voltage =
+            static_cast<float>(static_cast<uint32_t>(cell_state.min_voltage)
+                               << 14) /
+            5;
+        cell_voltages[cell_state.min_voltage_cell] =
+            static_cast<float>(static_cast<uint32_t>(cell_state.min_voltage)
+                               << 14) /
+            5;
+        mean_cell_voltage =
+            static_cast<float>(static_cast<uint32_t>(cell_state.mean_voltage)
+                               << 14) /
+            5;
     }
 
     void update_state_details(Messages::StateDetails state_details) {
@@ -64,9 +91,18 @@ class Module {
         // cells_voltage.message_number <= 15
 
         uint8_t base = cells_voltage.message_number * 3;
-        cell_voltages[base + 0] = cells_voltage.voltages[0];
-        cell_voltages[base + 1] = cells_voltage.voltages[1];
-        cell_voltages[base + 2] = cells_voltage.voltages[2];
+        cell_voltages[base + 0] =
+            static_cast<float>(static_cast<uint32_t>(cells_voltage.voltages[0])
+                               << 14) /
+            5;
+        cell_voltages[base + 1] =
+            static_cast<float>(static_cast<uint32_t>(cells_voltage.voltages[1])
+                               << 14) /
+            5;
+        cell_voltages[base + 2] =
+            static_cast<float>(static_cast<uint32_t>(cells_voltage.voltages[2])
+                               << 14) /
+            5;
     }
 
     void update_id(Messages::GetID update) {
