@@ -5,10 +5,9 @@
 
 namespace CMS {
 
-template <uint8_t ModuleAmount>
 class String {
    public:
-    Module modules[ModuleAmount + 1];  // Simplify indexing
+    std::array<Module, 3 + 1> modules{};  // Simplify indexing
 };
 
 }  // namespace CMS

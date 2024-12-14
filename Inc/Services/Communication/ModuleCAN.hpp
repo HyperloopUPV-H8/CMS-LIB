@@ -6,18 +6,15 @@
 
 namespace CMS {
 // Protocol between the CMSs and the board
-template <uint8_t StringAmount, uint8_t ModulesPerString>
 class ModuleCAN {
    public:
-    static CMS::String<ModulesPerString>
-        strings[StringAmount + 1];  // Simplify indexing
+    inline static std::array<String, 1 + 1> strings{};  // Simplify indexing
 
     // Read the next message and update the data with the new information
     static bool decode(const Messages::Packet &packet) {
         CMS::IDParts id_parts{CMS::get_id_parts(packet.id)};
 
-        if (id_parts.string > StringAmount ||
-            id_parts.module > ModulesPerString || packet.length != 8) {
+        if (id_parts.string > 1 || id_parts.module > 3 || packet.length != 8) {
             return false;
         }
 
@@ -181,7 +178,7 @@ class ModuleCAN {
                                     CMS::DataRequestFlags tx_config,
                                     CMS::TxCycle tx_cycle,
                                     Messages::Packet &packet) {
-        if (string > StringAmount || module > ModulesPerString) return false;
+        if (string > 1 || module > 3) return false;
 
         uint16_t raw_tx_config = static_cast<uint16_t>(tx_config);
         uint16_t raw_tx_cycle = static_cast<uint16_t>(tx_cycle);
@@ -217,8 +214,8 @@ class ModuleCAN {
                                        CMS::ServiceCommand command,
                                        Messages::Packet &packet) {
         if (command == CMS::ServiceCommand::RestartModule ||
-            command == CMS::ServiceCommand::NoCommand ||
-            string > StringAmount || module > ModulesPerString) {
+            command == CMS::ServiceCommand::NoCommand || string > 1 ||
+            module > 3) {
             return false;
         }
 
@@ -283,8 +280,5 @@ class ModuleCAN {
                                       packet);
     }
 };
-
-template <uint8_t S, uint8_t M>
-CMS::String<M> CMS::ModuleCAN<S, M>::strings[S + 1]{};
 
 }  // namespace CMS
