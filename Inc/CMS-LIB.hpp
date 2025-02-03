@@ -1,1 +1,3 @@
-#include "Services/Communication/ModuleCAN.hpp"
+#pragma once
+
+#include "CMS/Communications/ModuleCAN.hpp"

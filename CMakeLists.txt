@@ -46,8 +46,6 @@ target_compile_options(${CMSLIB_LIBRARY} PRIVATE
 
 target_include_directories(${CMSLIB_LIBRARY} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/Inc
-  ${CMAKE_CURRENT_LIST_DIR}/Inc/Models
-  ${CMAKE_CURRENT_LIST_DIR}/Inc/C++Utilities
 )
 
 if (PROJECT_IS_TOP_LEVEL)
