@@ -58,8 +58,8 @@ class ModuleCAN {
                         Messages::GetVersion &&response);
 
    public:
-    inline static Data::System<NUMBER_OF_STRINGS + 1, NUMBER_OF_MODULES + 1>
-        system{};
+    static Data::System<NUMBER_OF_STRINGS + 1, NUMBER_OF_MODULES + 1>
+        system;
 
     ModuleCAN(ReceiveFunction receive, TransmitFunction transmit)
         : receive(receive), transmit(transmit) {}

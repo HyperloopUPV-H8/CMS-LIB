@@ -38,26 +38,26 @@ struct System {
         for (uint8_t string{1}; string < NumberOfStrings; ++string) {
             for (uint8_t module{1}; module < NumberOfModules; ++module) {
                 for (uint8_t cell{0}; cell < 48; ++cell) {
-                    all_cells_voltage[string][module][cell] =
+                    all_cells_voltage[string - 1][module - 1][cell] =
                         &strings[string][module].cell_voltages[cell].millivolts;
                 }
 
-                all_module_voltage[string][module] =
+                all_module_voltage[string - 1][module - 1] =
                     &strings[string][module].module_voltage.volts;
 
-                all_max_cell_voltage[string][module] =
+                all_max_cell_voltage[string - 1][module - 1] =
                     &strings[string][module].max_cell_voltage.millivolts;
 
-                all_min_cell_voltage[string][module] =
+                all_min_cell_voltage[string - 1][module - 1] =
                     &strings[string][module].min_cell_voltage.millivolts;
 
-                all_avg_cell_voltage[string][module] =
+                all_avg_cell_voltage[string - 1][module - 1] =
                     &strings[string][module].avg_cell_voltage.millivolts;
 
-                all_max_temperature[string][module] =
+                all_max_temperature[string - 1][module - 1] =
                     &strings[string][module].max_temperature.celsius;
 
-                all_min_temperature[string][module] =
+                all_min_temperature[string - 1][module - 1] =
                     &strings[string][module].min_temperature.celsius;
             }
         }
