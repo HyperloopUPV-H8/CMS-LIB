@@ -26,7 +26,8 @@ CanPacket Messages::encode_data_request(uint8_t string, uint8_t module,
 
 CanPacket Messages::encode_get_id_command(uint8_t string, uint8_t module) {
     return CanPacket{
-        .id{Types::CanID(Types::ProtocolNumber::ServiceRequest, string, module)
+        .id{Types::CanID(Types::ProtocolNumber::ServiceRequest, string + 1,
+                         module + 1)
                 .encode()},
         .length{8},
         .payload{ENCODE_UINT8(Types::ServiceType::Regular),
@@ -36,7 +37,8 @@ CanPacket Messages::encode_get_id_command(uint8_t string, uint8_t module) {
 
 CanPacket Messages::encode_get_version_command(uint8_t string, uint8_t module) {
     return CanPacket{
-        .id{Types::CanID(Types::ProtocolNumber::ServiceRequest, string, module)
+        .id{Types::CanID(Types::ProtocolNumber::ServiceRequest, string + 1,
+                         module + 1)
                 .encode()},
         .length{8},
         .payload{ENCODE_UINT8(Types::ServiceType::Regular),
@@ -48,7 +50,8 @@ CanPacket Messages::encode_get_version_command(uint8_t string, uint8_t module) {
 CanPacket Messages::encode_restart_command(uint8_t string, uint8_t module,
                                            Types::RestartMode mode) {
     return CanPacket{
-        .id{Types::CanID(Types::ProtocolNumber::ServiceRequest, string, module)
+        .id{Types::CanID(Types::ProtocolNumber::ServiceRequest, string + 1,
+                         module + 1)
                 .encode()},
         .length{8},
         .payload{ENCODE_UINT8(Types::ServiceType::Regular),

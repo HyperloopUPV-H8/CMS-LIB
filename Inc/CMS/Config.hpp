@@ -9,7 +9,7 @@
 
 // Overrides the MODULE_VOLTAGE_FOR_CELL_VOLTAGE check and ask for cell voltage
 // directly
-#define FORCE_REQUEST_CELL_VOLTAGE 0
+#define FORCE_REQUEST_CELL_VOLTAGE 1
 
 // Ensures the live count for each module is increasing each time module state
 // is received

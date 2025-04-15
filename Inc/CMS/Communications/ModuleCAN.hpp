@@ -22,11 +22,11 @@ class ModuleCAN {
 
     struct ModuleCommunicationState {
         bool sending_cell_voltages{false};
-        Types::TxCycle_t configured_tx;
+        Types::TxCycle_t configured_tx{0};
     };
 
-    std::array<std::array<ModuleCommunicationState, NUMBER_OF_MODULES + 1>,
-               NUMBER_OF_STRINGS + 1>
+    std::array<std::array<ModuleCommunicationState, NUMBER_OF_MODULES>,
+               NUMBER_OF_STRINGS>
         communication_state{};
 
     bool request_data(uint8_t string, uint8_t module,
@@ -58,8 +58,7 @@ class ModuleCAN {
                         Messages::GetVersion &&response);
 
    public:
-    static Data::System<NUMBER_OF_STRINGS + 1, NUMBER_OF_MODULES + 1>
-        system;
+    static Data::System<NUMBER_OF_STRINGS, NUMBER_OF_MODULES> system;
 
     ModuleCAN(ReceiveFunction receive, TransmitFunction transmit)
         : receive(receive), transmit(transmit) {}

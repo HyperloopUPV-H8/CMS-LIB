@@ -17,22 +17,22 @@ bool ModuleCAN::update() {
     switch (id.protocol) {
         case Types::ProtocolNumber::ModuleStateResponse:
             return update_module_state(
-                id.string, id.module,
+                id.string - 1, id.module - 1,
                 std::move(Messages::decode_module_state_response(
                     last_packet.payload)));
         case Types::ProtocolNumber::CellStateResponse:
             return update_cell_state(
-                id.string, id.module,
+                id.string - 1, id.module - 1,
                 std::move(
                     Messages::decode_cell_state_response(last_packet.payload)));
         case Types::ProtocolNumber::StateDetailsResponse:
             return update_state_details(
-                id.string, id.module,
+                id.string - 1, id.module - 1,
                 std::move(Messages::decode_state_details_response(
                     last_packet.payload)));
         case Types::ProtocolNumber::CellsVoltageResponse:
             return update_cell_voltages(
-                id.string, id.module,
+                id.string - 1, id.module - 1,
                 std::move(Messages::decode_cell_voltages_response(
                     last_packet.payload)));
         case Types::ProtocolNumber::ServiceResponse:
@@ -42,12 +42,12 @@ bool ModuleCAN::update() {
                         Messages::decode_service_command(last_packet.payload)) {
                         case Types::ServiceCommand::GetID:
                             return update_id(
-                                id.string, id.module,
+                                id.string - 1, id.module - 1,
                                 std::move(Messages::decode_get_id_response(
                                     last_packet.payload)));
                         case Types::ServiceCommand::GetVersion:
                             return update_version(
-                                id.string, id.module,
+                                id.string - 1, id.module - 1,
                                 std::move(Messages::decode_get_version_response(
                                     last_packet.payload)));
                             // TODO: check reset command response
@@ -55,7 +55,8 @@ bool ModuleCAN::update() {
                             return false;
                     }
                 case Types::ServiceType::ErrorReport:
-                    system.strings[id.string][id.module].last_error_code =
+                    system.strings[id.string - 1][id.module - 1]
+                        .last_error_code =
                         Messages::decode_service_error(last_packet.payload);
                     return true;
                 default:
