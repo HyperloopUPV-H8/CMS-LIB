@@ -8,6 +8,8 @@
 
 namespace CMS::Communications {
 
+uint64_t get_ns_since_start();
+
 class ModuleCAN {
     // Returns true if data was read
     using ReceiveFunction = std::function<bool(Messages::CanPacket &)>;
@@ -63,6 +65,7 @@ class ModuleCAN {
     ModuleCAN(ReceiveFunction receive, TransmitFunction transmit)
         : receive(receive), transmit(transmit) {}
 
+    bool keepalive_expired{false};
     bool update();
 
     bool start_module(uint8_t string, uint8_t module,

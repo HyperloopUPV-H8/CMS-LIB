@@ -10,7 +10,15 @@ CMS::Messages::CanPacket ModuleCAN::last_packet{};
 
 bool ModuleCAN::update() {
     bool received_something = receive(last_packet);
+
+    static uint64_t last_update_time = get_ns_since_start();
+    uint64_t update_time = get_ns_since_start();
+    if ((update_time - last_update_time) >= 100000000) {
+        keepalive_expired = true;
+    }
+
     if (!received_something) return false;
+    last_update_time = update_time;
 
     Types::CanID id(last_packet.id);
 
